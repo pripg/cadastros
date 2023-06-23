@@ -1,0 +1,87 @@
+CREATE TABLE usuarios (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nome VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  senha VARCHAR(100) NOT NULL
+);
+
+//
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CadastroBackend {
+    private Connection connection;
+
+    public CadastroBackend() {
+        // Configurar a conexão com o banco de dados
+        String url = "jdbc:mysql://localhost:3306/nome_do_banco_de_dados";
+        String username = "usuario";
+        String password = "senha";
+
+        try {
+            connection = DriverManager.getConnection(url, username, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cadastrarUsuario(String nome, String email, String senha) {
+        String sql = "INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?)";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, nome);
+            statement.setString(2, email);
+            statement.setString(3, senha);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Usuario> listarUsuarios() {
+        List<Usuario> usuarios = new ArrayList<>();
+        String sql = "SELECT * FROM usuarios";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String nome = resultSet.getString("nome");
+                String email = resultSet.getString("email");
+                String senha = resultSet.getString("senha");
+
+                Usuario usuario = new Usuario(id, nome, email, senha);
+                usuarios.add(usuario);
+            }
+
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return usuarios;
+    }
+
+    public static void main(String[] args) {
+        CadastroBackend cadastro = new CadastroBackend();
+
+        // Exemplo de cadastro de usuários
+        cadastro.cadastrarUsuario("João", "joao@example.com", "senha123");
+        cadastro.cadastrarUsuario("Maria", "maria@example.com", "senha456");
+
+        // Exemplo de listagem de usuários
+        List<Usuario> usuariosCadastrados = cadastro.listarUsuarios();
+        for (Usuario usuario : usuariosCadastrados) {
+            System.out.println("ID: " + usuario.getId());
+            System.out.println("Nome: " + usuario.getNome());
+            System.out.println("Email: " + usuario.getEmail());
+            System.out.println("Senha: " + usuario.get
