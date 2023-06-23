@@ -1,0 +1,60 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class CadastroBackend {
+    private List<Usuario> usuarios;
+
+    public CadastroBackend() {
+        usuarios = new ArrayList<>();
+    }
+
+    public void cadastrarUsuario(String nome, String email, String senha) {
+        Usuario novoUsuario = new Usuario(nome, email, senha);
+        usuarios.add(novoUsuario);
+    }
+
+    public List<Usuario> listarUsuarios() {
+        return usuarios;
+    }
+
+    public static void main(String[] args) {
+        CadastroBackend cadastro = new CadastroBackend();
+
+        // Exemplo de cadastro de usuários
+        cadastro.cadastrarUsuario("João", "joao@example.com", "senha123");
+        cadastro.cadastrarUsuario("Maria", "maria@example.com", "senha456");
+
+        // Exemplo de listagem de usuários
+        List<Usuario> usuariosCadastrados = cadastro.listarUsuarios();
+        for (Usuario usuario : usuariosCadastrados) {
+            System.out.println("Nome: " + usuario.getNome());
+            System.out.println("Email: " + usuario.getEmail());
+            System.out.println("Senha: " + usuario.getSenha());
+            System.out.println("---------------------------");
+        }
+    }
+}
+
+class Usuario {
+    private String nome;
+    private String email;
+    private String senha;
+
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+}
